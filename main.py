@@ -44,7 +44,6 @@ class MainActivity(QWidget):
         vbDeviceInfo.addWidget(labelDeviceInfo)
         vbDeviceInfo.addWidget(self.table)
 
-
         # 설정 값
         hbPreference = QHBoxLayout()
 
@@ -56,8 +55,6 @@ class MainActivity(QWidget):
         btnPause.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         vhStartBtn.addWidget(btnStart)
         vhStartBtn.addWidget(btnPause)
-
-
 
         # IP Type
         groupbox = QGroupBox('아이피 변경 방식')
