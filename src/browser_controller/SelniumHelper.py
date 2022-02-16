@@ -7,7 +7,6 @@ from selenium.webdriver.common.by import By
 from src.data.EmulationInfo import EmulationInfo
 
 
-
 class SeleniumHelper:
     def __init__(self, ud_path, emulation_info: EmulationInfo):
         self.ud_path = ud_path
@@ -58,10 +57,10 @@ class SeleniumHelper:
         self.driver.close()
 
     def find_element(self, css: str) -> WebElement:
-        return self.driver.find_element(By.CSS_SELECTOR(css))
+        return self.driver.find_element(By.CSS_SELECTOR, css)
 
     def find_elements(self, css: str) -> WebElement:
-        return self.driver.find_elements(By.CSS_SELECTOR(css))
+        return self.driver.find_elements(By.CSS_SELECTOR, css)
 
     def click_element(self, ele: WebElement):
         ActionChains(self.driver).move_to_element(ele).click().perform()
@@ -75,3 +74,33 @@ class SeleniumHelper:
 
     def go_to_url(self, url: str):
         self.driver.get(url)
+
+    # element 의 속성 변경 ex) class, id, 등등 a<href='1' id='2> <>안에 있는 속성 수정
+    def set_attributes(self, ele: WebElement, attributes_name: str, attributes_value: str):
+        self.driver.execute_script("arguments[0].setAttribute(arguments[1], arguments[2]);",
+                                   ele, attributes_name, attributes_value)
+
+    # element 의 css 변경 ex) set_css(ele, "font-size", "14px")  지원 되는게 있고 안 되는게 있음 (jquery 필요?)
+    def set_css(self, ele: WebElement, css_name: str, css_value: str):
+        self.driver.execute_script("arguments[0].css(arguments[1], arguments[2]);",
+                                   ele, css_name, css_value)
+
+    # element 의 속성 반환
+    def get_attributes(self, ele: WebElement, attributes_name: str):
+        return ele.get_attribute(attributes_name)
+
+    # element 의 input area 초기화
+    def clear_input_area(self, ele: WebElement):
+        ele.clear()
+
+    # Frame 빠져 나오기
+    def exit_frame(self):
+        self.driver.switch_to.default_content()
+
+    # Frame element 로 이동
+    def go_to_frame(self, ele: WebElement):
+        self.driver.switch_to.frame(element)
+
+    # element 가 보이는 위치로 스크롤 이동
+    def scroll_to_element_top(self, ele: WebElement):
+        self.driver.execute_script('arguments[0].scrollIntoView(true);', ele)
