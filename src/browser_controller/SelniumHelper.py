@@ -3,13 +3,15 @@ import time
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
 from src.data.EmulationInfo import EmulationInfo
 
+
+
 class SeleniumHelper:
-    def __init__(self, ud_path, emulation_info:EmulationInfo):
+    def __init__(self, ud_path, emulation_info: EmulationInfo):
         self.ud_path = ud_path
         self.emulation_info = emulation_info
-
 
     def open_browser(self):
         chrome_options = webdriver.ChromeOptions()
@@ -49,22 +51,27 @@ class SeleniumHelper:
         # Platform 설정
         self.driver.execute_cdp_cmd("Emulation.setNavigatorOverrides", {'platform': prefs['platform']})
 
-
     def close_browser(self):
         self.driver.quit()
 
-    def find_element(self, css:str) -> WebElement:
-        return self.driver.find_element_by_css_selector(css)
+    def close_tab(self):
+        self.driver.close()
 
-    def click_element(self, ele:WebElement):
+    def find_element(self, css: str) -> WebElement:
+        return self.driver.find_element(By.CSS_SELECTOR(css))
+
+    def find_elements(self, css: str) -> WebElement:
+        return self.driver.find_elements(By.CSS_SELECTOR(css))
+
+    def click_element(self, ele: WebElement):
         ActionChains(self.driver).move_to_element(ele).click().perform()
 
-    def send_keys(self, content:str):
+    def send_keys(self, content: str):
         ActionChains(self.driver).send_keys(content).perform()
 
-    def scroll_to_element(self, ele:WebElement):
+    def scroll_to_element(self, ele: WebElement):
         self.driver.execute_script(f"window.scrollTo(0, {ele.location['y']} + 200);")
         time.sleep(3)
 
-    def go_to_url(self, url:str):
+    def go_to_url(self, url: str):
         self.driver.get(url)
