@@ -89,10 +89,6 @@ class SeleniumHelper:
     def get_attributes(self, ele: WebElement, attributes_name: str):
         return ele.get_attribute(attributes_name)
 
-    # element 의 input area 초기화
-    def clear_input_area(self, ele: WebElement):
-        ele.clear()
-
     # Frame 빠져 나오기
     def exit_frame(self):
         self.driver.switch_to.default_content()
@@ -104,3 +100,12 @@ class SeleniumHelper:
     # element 가 보이는 위치로 스크롤 이동
     def scroll_to_element_top(self, ele: WebElement):
         self.driver.execute_script('arguments[0].scrollIntoView(true);', ele)
+
+    # 새로운 탭 열기
+    def open_new_tab(self, url: str):
+        self.driver.execute_script("window.open('" + url + "');")
+
+    # 가장 최근 윈도우 switch
+    def switch_latest(self):
+        self.driver.switch_to.window(self.driver.window_handles[len(self.driver.window_handles)-1])
+        print("latest window switch - " + self.driver.current_url)
