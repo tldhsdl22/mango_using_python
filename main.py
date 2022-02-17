@@ -57,11 +57,11 @@ class MainActivity(QWidget):
 
     # 셋팅값 - 불러오기
     def load_ini(self, key) -> str:
-        settings = self.properties["APP SETTINGS"]
-        if key in settings:
-            return settings[key]
-        else:
-            return ""
+        if "APP SETTINGS" in self.properties:
+            settings = self.properties["APP SETTINGS"]
+            if key in settings:
+                return settings[key]
+        return ""
 
     # 셋팅값 - 저장하기
     def save_ini(self, key, val):
