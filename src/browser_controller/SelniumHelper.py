@@ -80,14 +80,19 @@ class SeleniumHelper:
         self.driver.execute_script("arguments[0].setAttribute(arguments[1], arguments[2]);",
                                    ele, attributes_name, attributes_value)
 
+    # element 의 속성 반환 ex) get_attributes(ele, "class") -> class 속성의 값 반환
+    def get_attributes(self, ele: WebElement, attributes_name: str):
+        return ele.get_attribute(attributes_name)
+
+    # element 의 속성 제거 ex) remove_attributes(ele, "target") -> target 속성 제거
+    def remove_attributes(self, ele: WebElement, attributes_name: str):
+        self.driver.execute_script("arguments[0].removeAttribute(arguments[1]);",
+                                   ele, attributes_name)
+
     # element 의 css 변경 ex) set_css(ele, "font-size", "14px")  지원 되는게 있고 안 되는게 있음 (jquery 필요?)
     def set_css(self, ele: WebElement, css_name: str, css_value: str):
         self.driver.execute_script("arguments[0].css(arguments[1], arguments[2]);",
                                    ele, css_name, css_value)
-
-    # element 의 속성 반환
-    def get_attributes(self, ele: WebElement, attributes_name: str):
-        return ele.get_attribute(attributes_name)
 
     # Frame 빠져 나오기
     def exit_frame(self):
@@ -109,3 +114,11 @@ class SeleniumHelper:
     def switch_latest(self):
         self.driver.switch_to.window(self.driver.window_handles[len(self.driver.window_handles)-1])
         print("latest window switch - " + self.driver.current_url)
+
+    # gps(geo_location) 설정
+    def set_gps(self, latitude: int, longitude: int, accuracy: int = 100):
+        self.driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+            "latitude": latitude,
+            "longitude": longitude,
+            "accuracy": accuracy
+        })
