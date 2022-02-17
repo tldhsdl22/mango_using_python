@@ -105,6 +105,7 @@ class MainActivity(QWidget):
         self.show()
 
         self.printLog("test")
+        self.printLog("test2")
 
     def printLog(self, str):
         cur_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
