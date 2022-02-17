@@ -1,4 +1,6 @@
 import sys
+from datetime import datetime
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.uic.properties import QtWidgets
@@ -22,7 +24,6 @@ class MainActivity(QWidget):
         labelLog = QLabel("Log")
         self.textLog = QPlainTextEdit()
         self.textLog.setReadOnly(True)
-        self.textLog.appendPlainText('Simple Test')
         vbLog.addWidget(labelLog)
         vbLog.addWidget(self.textLog)
 
@@ -103,11 +104,9 @@ class MainActivity(QWidget):
         self.setGeometry(300, 300, 850, 500)
         self.show()
 
-    def testLog(self):
-        self.printLog("test")
-
     def printLog(self, str):
-        self.textLog.appendHtml(str)
+        cur_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.textLog.appendHtml(f'{cur_time}&nbsp;&nbsp;{str}')
 
 
 if __name__ == '__main__':
