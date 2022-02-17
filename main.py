@@ -104,6 +104,8 @@ class MainActivity(QWidget):
         self.setGeometry(300, 300, 850, 500)
         self.show()
 
+        self.printLog("test")
+
     def printLog(self, str):
         cur_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.textLog.appendHtml(f'{cur_time}&nbsp;&nbsp;{str}')
