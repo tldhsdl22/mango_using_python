@@ -10,6 +10,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 
 from src.browser_controller.ChromeController import ChromeController
+from src.data.IP import IP
+from src.data.NNB import NNB
+from src.data.UserAgentInfo import UserAgentInfo
+from src.data.UserData import UserData
 
 
 class MainActivity(QWidget):
@@ -232,14 +236,51 @@ class Worker(QtCore.QThread):
 
     def run(self):
         self.print_log.emit(f'{self.idx, self.device_id, self.ip_id, self.ip_type} 작업시작')
-        while True:
-            controller = ChromeController()
+        #while True:
+        for _ in range(0, 1):
             self.print_device_info.emit(self.idx, "시작", '', '')
-            time.sleep(2)
-            self.print_device_info.emit(self.idx, "동작", 'tldhsdl33', 'aaasssaassd')
-            time.sleep(2)
-            self.print_device_info.emit(self.idx, "완료", 'tldhsdl33', 'aaasssaassd')
-            time.sleep(2)
+            # 전체 리소스 초기화
+
+            # 아이피 변경
+            if self.ip_type == "VPN":
+                # 아무것도 작업하지 않을 때까지 대기
+                {}
+
+            ip = "123.123.123.123"
+            total_ip = IP.post_ip(ip, self.device_id, f'{self.device_id}_{self.idx}')
+            if total_ip is None:
+                self.print_log.emit('아이피 기록 실패')
+                continue
+            # 아이피 변경하게
+
+
+            # 유저데이터 가져오기
+            userdata = UserData.get_data(total_ip.use_ip_id, self.device_id)
+
+            # NNB 가져오기
+            nnb = NNB.get_data(userdata.id, self.device_id)
+
+            # 유저에이전트 가져오기
+            useragent = UserAgentInfo.get_data(userdata.id, self.device_id)
+            
+            # 앱 열기
+            controller = ChromeController()
+            controller.open_browser(f'{userdata.id}', useragent)
+            controller.go_to_naver()
+            time.sleep(10)
+
+
+            # 로그인
+            
+            # 작업 종류 가져오기
+            
+            # 작업 수행
+
+
+            self.print_device_info.emit(self.idx, "완료", '', '')
+
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

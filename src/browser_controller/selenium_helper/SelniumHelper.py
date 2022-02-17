@@ -1,41 +1,43 @@
+import os
 import time
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
-from src.data.EmulationInfo import EmulationInfo
+
+from src.data.UserAgentInfo import UserAgentInfo
 
 
 class SeleniumHelper:
-    def __init__(self, ud_path, emulation_info: EmulationInfo):
+    def __init__(self, ud_path, ua_info: UserAgentInfo):
         self.ud_path = ud_path
-        self.emulation_info = emulation_info
+        self.ua_info = ua_info
 
     def open_browser(self):
         chrome_options = webdriver.ChromeOptions()
-
         chrome_options.add_argument('--lang=ko-KR')  # 언어 설정
         chrome_options.add_argument('--disk-cache-size=0')  # 캐시 최대 용량 설정 ( 0MB )
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # 자동화 문구 제거 1
         chrome_options.add_experimental_option("useAutomationExtension", False)  # 자동화 문구 제거 2
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])  # 자동화 문구 제거 3
-        chrome_options.add_argument('--user-agent=' + self.emulation_info.user_agent)  # User-Agent 설정
-        chrome_options.add_argument("--user-data-dir=" + self.ud_path)  # 유저 데이터 경로 설정
+        chrome_options.add_argument('--user-agent=' + self.ua_info.user_agent)  # User-Agent 설정
+        chrome_options.add_argument(f'--user-data-dir={os.getcwd()}/userdata/{self.ud_path}')  # 유저 데이터 경로 설정
+        #chrome_options.add_argument(f'--user-data-dir=G:/userdata/3')  # 유저 데이터 경로 설정
 
-        self.driver = webdriver.Chrome(executable_path='selenium_helper/chromedriver.exe', options=chrome_options)
+        self.driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
         self.set_device_detail()
 
     # Device 세부 설정
     def set_device_detail(self):
         # Device 설정 값
         prefs = {
-            'width': self.emulation_info.width,
-            'height': self.emulation_info.height,
-            'screenWidth': self.emulation_info.width,
-            'screenHeight': self.emulation_info.height,
-            'deviceScaleFactor': self.emulation_info.pixel_ratio,
-            'platform': self.emulation_info.platform,
+            'width': self.ua_info.width,
+            'height': self.ua_info.height,
+            'screenWidth': self.ua_info.width,
+            'screenHeight': self.ua_info.height,
+            'deviceScaleFactor': self.ua_info.ratio,
+            'platform': self.ua_info.platform,
             'mobile': True,
         }
 
@@ -100,7 +102,7 @@ class SeleniumHelper:
 
     # Frame element 로 이동
     def go_to_frame(self, ele: WebElement):
-        self.driver.switch_to.frame(element)
+        self.driver.switch_to.frame(ele)
 
     # element 가 보이는 위치로 스크롤 이동
     def scroll_to_element_top(self, ele: WebElement):
